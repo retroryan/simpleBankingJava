@@ -1,8 +1,8 @@
 package controllers;
 
 import akka.actor.Props;
+import akka.actor.Status;
 import akka.actor.UntypedActor;
-import models.AccountBalances;
 
 import java.util.List;
 
@@ -10,12 +10,16 @@ import static models.AccountBalances.*;
 
 public class ActorAccountProxies {
 
+
     public static class GetAccountBalances {
         public Long accountId;
 
         public GetAccountBalances(Long accountId) {
             this.accountId = accountId;
         }
+    }
+
+    public static class AccountNotFoundException extends Exception {
     }
 
     public static class CheckingAccountActor extends UntypedActor {
@@ -29,8 +33,14 @@ public class ActorAccountProxies {
             if (message instanceof GetAccountBalances) {
                 GetAccountBalances getAccountBalances = (GetAccountBalances) message;
                 Thread.sleep(400);
-                CheckingAccountBalances checkingAccountBalances = new CheckingAccountBalances(checkingAccountData.get(getAccountBalances.accountId));
-                sender().tell(checkingAccountBalances, self());
+                List<AccountBalanceTuple> accountBalanceTuples = checkingAccountData.get(getAccountBalances.accountId);
+                if (accountBalanceTuples == null) {
+                    sender().tell(new Status.Failure(new AccountNotFoundException()), self());
+                    throw new AccountNotFoundException();
+                } else {
+                    CheckingAccountBalances checkingAccountBalances = new CheckingAccountBalances(accountBalanceTuples);
+                    sender().tell(checkingAccountBalances, self());
+                }
             }
         }
     }

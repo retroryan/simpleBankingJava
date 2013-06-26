@@ -25,7 +25,7 @@ public class AccountBalanceActorService extends UntypedActor {
     ActorRef savingsAccountProxy;
     ActorRef moneyMarketAccountProxy;
 
-    public String trickValue = "Real Value";
+    public String mutableValue = "Real Value";
 
     public static Props mkProps(final ActorRef checkingAccountProxy, final ActorRef savingsAccountProxy, final ActorRef moneyMarketAccountProxy) {
          Props props = new Props(new UntypedActorFactory() {
@@ -67,14 +67,14 @@ public class AccountBalanceActorService extends UntypedActor {
                 @Override public final void onSuccess(AccountBalances accountBalances) {
                     System.out.println("OnSuccess originalSender: " + originalSender);
                     System.out.println("OnSuccess sender(): " + sender());
-                    System.out.println("trickValue = " + trickValue);
+                    System.out.println("mutableValue = " + mutableValue);
                     originalSender.tell(accountBalances, self());
                 }
             }, context().dispatcher());
 
 
             //trick value is changed after the callback is created, showing what happens when you close over mutable data
-            trickValue = "Fake Value";
+            mutableValue = "Fake Value";
 
             accountBalancesFuture.onFailure(new OnFailure() {
                 public void onFailure(Throwable failure) {

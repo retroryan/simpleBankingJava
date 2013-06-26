@@ -15,11 +15,11 @@
         });
 
         $("#asyncOneRetrieveSubmit").bind('click', function () {
-            retrieveAccountBalances("asyncGetAccountBalances");
+            retrieveAccountBalances("asyncGetAccountBalancesOne");
         });
 
         $("#asyncTwoRetrieveSubmit").bind('click', function () {
-            retrieveAccountBalances("asyncTwoGetAccountBalances");
+            retrieveAccountBalances("asyncGetAccountBalancesTwo");
         });
 
         $("#asyncThreeRetrieveSubmit").bind('click', function () {
@@ -97,6 +97,7 @@
 <H3>Enter User ID to Retrieve: <input type="text" id="accountId" value="1"/></H3>
 <input type="submit" value="Blocking Retrieve" id="blockingRetrieveSubmit"/>
 <input type="submit" value="Async Retrieve - One " id="asyncOneRetrieveSubmit"/>
+<input type="submit" value="Async Retrieve - Two " id="asyncTwoRetrieveSubmit"/>
 
 <H3>Time to Load Account Balances: <span id="loadTime" /> milliseconds</H3>
 <H3>Checking Accounts</H3>
